@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/blueprint"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+       http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd
+       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+       http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
+
+	<!-- Environment Configuration -->
+	<cm:property-placeholder id="common" persistent-id="com.redhat.camel.environment" update-strategy="reload">
+		<cm:default-properties>
+			<cm:property name="amq.consumer.brokerURL" value="discovery:(fabric:network-consumer)" />
+			<!-- cm:property name="amq.consumer.brokerURL" value="discovery:(fabric:default)" /-->
+			<cm:property name="amq.consumer.userName" value="admin" />
+			<cm:property name="amq.consumer.password" value="admin" />
+			<cm:property name="env.prop01" value="Value for env.prop01" />
+			<cm:property name="common.prop01" value="Value for common.prop01" />
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="brokerURL" value="${amq.consumer.brokerURL}" />
+		<property name="userName" value="${amq.consumer.userName}" />
+		<property name="password" value="${amq.consumer.password}" />
+	</bean>
+		
+	<!-- Error Handler -->
+	<bean id="myDeadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+  		<property name="deadLetterUri" value="activemq:queue:consumer-errors"/>
+  		<property name="redeliveryPolicy" ref="myRedeliveryPolicyConfig"/>
+	</bean>
+	<bean id="myRedeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
+  		<property name="maximumRedeliveries" value="1"/>
+  		<property name="redeliveryDelay" value="10000"/>
+	</bean>
+
+	<!-- Camel Context -->	
+	<camelContext trace="false" id="camel-amq-consumers-blueprintContext" xmlns="http://camel.apache.org/schema/blueprint"
+		errorHandlerRef="myDeadLetterErrorHandler">
+		<route id="cosumerProcess">
+			<from uri="activemq:queue:sampleQueue" />
+			<log message="Message '${body}' consumed from queue at {{amq.consumer.brokerURL}} " />
+		</route>
+	</camelContext>
+
+</blueprint>

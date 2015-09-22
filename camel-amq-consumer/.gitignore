@@ -1,5 +1,6 @@
 /.settings/
 /.classpath
 /.jazzignore
-/.metadata
-/RemoteSystemsTempFiles/
+/target/
+/.project
+

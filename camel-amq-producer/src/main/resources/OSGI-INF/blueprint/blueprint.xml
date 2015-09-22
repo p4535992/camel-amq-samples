@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/blueprint"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+       http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd
+       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+       http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
+
+	<!-- Environment Configuration -->
+	<cm:property-placeholder id="common" persistent-id="com.redhat.camel.environment" update-strategy="reload">
+		<cm:default-properties>
+			<cm:property name="amq.producer.brokerURL" value="discovery:(fabric:network-producer)" />
+			<!-- cm:property name="amq.producer.brokerURL" value="discovery:(fabric:default)" /-->
+			<cm:property name="amq.producer.userName" value="admin" />
+			<cm:property name="amq.producer.password" value="admin" />
+			<cm:property name="env.prop01" value="Value for env.prop01" />
+			<cm:property name="common.prop01" value="Value for common.prop01" />
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<!-- Business Beans -->
+	<bean id="generatorBean" class="com.redhat.camel.amq.beans.IdGeneratorBean" />
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="brokerURL" value="${amq.producer.brokerURL}" />
+		<property name="userName" value="${amq.producer.userName}" />
+		<property name="password" value="${amq.producer.password}" />
+	</bean>
+		
+	<!-- Error Handler -->
+	<bean id="myDeadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+  		<property name="deadLetterUri" value="activemq:queue:errors"/>
+  		<property name="redeliveryPolicy" ref="myRedeliveryPolicyConfig"/>
+	</bean>
+	<bean id="myRedeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
+  		<property name="maximumRedeliveries" value="1"/>
+  		<property name="redeliveryDelay" value="10000"/>
+	</bean>
+
+	<!-- Camel Context -->	
+	<camelContext trace="false" id="camel-amq-producers-blueprintContext" xmlns="http://camel.apache.org/schema/blueprint"
+		errorHandlerRef="myDeadLetterErrorHandler">
+		<route id="timerToSendMessage">
+			<from uri="timer:amq-sender?period=60000" />
+			<setBody>
+				<method ref="generatorBean" method="generateNewID"></method>
+			</setBody>
+			<log message="Sending Message '#${body}' to queue at {{amq.producer.brokerURL}} Broker" />
+			<to uri="activemq:queue:sampleQueue" />
+		</route>
+	</camelContext>
+
+</blueprint>
