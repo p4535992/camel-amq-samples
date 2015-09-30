@@ -7,7 +7,7 @@
 	<groupId>com.redhat.camel</groupId>
 	<artifactId>camel-amq-producer</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.13-SNAPSHOT</version>
+	<version>1.0.15-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -207,8 +207,7 @@
 				<artifactId>fabric8-maven-plugin</artifactId>
 				<version>${io.fabric8.version}</version>
 				<configuration>
-					<!--jolokiaUrl>http://rhel6-jboss-master:8181/jolokia</jolokiaUrl -->
-					<jolokiaUrl>http://rhel7jboss01:8181/jolokia</jolokiaUrl>
+					<jolokiaUrl>http://localhost:8181/jolokia</jolokiaUrl>
 				</configuration>
 				<executions>
 					<execution>

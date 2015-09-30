@@ -49,7 +49,7 @@
 			<setBody>
 				<method ref="generatorBean" method="generateNewID"></method>
 			</setBody>
-			<log message="Sending Message '#${body}' to queue at {{amq.producer.brokerURL}} Broker" />
+			<log message="Sending Message '#${body}' to queue at {{amq.producer.brokerURL}} Broker. Credentials: {{amq.producer.userName}}-{{amq.producer.password}}" />
 			<to uri="activemq:queue:sampleQueue" />
 		</route>
 	</camelContext>
