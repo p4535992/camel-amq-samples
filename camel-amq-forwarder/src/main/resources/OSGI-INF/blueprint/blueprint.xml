@@ -16,7 +16,10 @@
 			<cm:property name="amq.source.brokerURL" value="discovery:(fabric:default)" />
 			<cm:property name="amq.source.userName" value="admin" />
 			<cm:property name="amq.source.password" value="admin" />
+			<!-- 
 			<cm:property name="amq.destination.brokerURL" value="failover:(tcp://rhel7jboss01:61616,tcp://rhel7jboss02:61616,tcp://rhel7jboss03:61616)" />
+			-->
+			<cm:property name="amq.destination.brokerURL" value="discovery:(fabric:demo)" />
 			<cm:property name="amq.destination.userName" value="admin" />
 			<cm:property name="amq.destination.password" value="admin" />
 			<cm:property name="env.prop01" value="Value for env.prop01" />
@@ -49,10 +52,10 @@
 	<camelContext trace="false" id="camel-amq-forwarders-blueprintContext" xmlns="http://camel.apache.org/schema/blueprint"
 		errorHandlerRef="myDeadLetterErrorHandler">
 		<route id="cosumerProcess">
-			<from uri="activemqSource:queue:sampleQueue" />
-			<log message="Message '#${body}' consumed from queue at {{amq.source.brokerURL}} " />
-			<log message="Message '#${body}' sent to queue at {{amq.destination.brokerURL}} " />
-			<to uri="activemqDestination:queue:sampleQueue" />
+			<from uri="activemqSource:queue:sampleQueue2" />
+			<log message="Message '#${body}' consumed from 'sampleQueue2' at {{amq.source.brokerURL}} " />
+			<log message="Message '#${body}' sent to 'anotherSampleQueue' at {{amq.destination.brokerURL}} " />
+			<to uri="activemqDestination:queue:anotherSampleQueue" />
 		</route>
 	</camelContext>
 
