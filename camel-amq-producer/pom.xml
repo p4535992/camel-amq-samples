@@ -13,7 +13,7 @@
 	<groupId>com.redhat.camel</groupId>
 	<artifactId>camel-amq-producer</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.30-SNAPSHOT</version>
+	<version>1.0.32-SNAPSHOT</version>
 
 	<properties>
 		<!-- Fabric8 Properties -->

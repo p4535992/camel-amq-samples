@@ -4,14 +4,7 @@
     xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
     xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
     xmlns:jaxws="http://cxf.apache.org/jaxws"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="
-    	http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd        
-    	http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd        
-    	http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd        
-    	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd        
-    	http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
-    	
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="      http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd              http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd              http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd              http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd              http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
     <!-- Environment Configuration -->
     <cm:property-placeholder id="common"
         persistent-id="com.redhat.camel.environment" update-strategy="reload">
@@ -23,17 +16,14 @@
             <cm:property name="common.prop01" value="Value for common.prop01"/>
         </cm:default-properties>
     </cm:property-placeholder>
-
     <!-- Business Beans -->
     <bean class="com.redhat.camel.amq.beans.IdGeneratorBean" id="generatorBean"/>
-
-	<!-- AMQ Component -->
+    <!-- AMQ Component -->
     <bean class="org.apache.activemq.camel.component.ActiveMQComponent" id="activemq">
         <property name="brokerURL" value="${amq.producer.brokerURL}"/>
         <property name="userName" value="${amq.producer.userName}"/>
         <property name="password" value="${amq.producer.password}"/>
     </bean>
-    
     <!-- Error Handler -->
     <bean class="org.apache.camel.builder.DeadLetterChannelBuilder" id="myDeadLetterErrorHandler">
         <property name="deadLetterUri" value="activemq:queue:errors"/>
@@ -43,7 +33,6 @@
         <property name="maximumRedeliveries" value="1"/>
         <property name="redeliveryDelay" value="10000"/>
     </bean>
-    
     <!-- Camel Context -->
     <camelContext errorHandlerRef="myDeadLetterErrorHandler"
         id="camel-amq-producers-blueprintContext" trace="false" xmlns="http://camel.apache.org/schema/blueprint">
@@ -55,6 +44,16 @@
             <log id="_log1" message="Sending Message '#${body}' to queue at {{amq.producer.brokerURL}} Broker. Credentials: {{amq.producer.userName}}-{{amq.producer.password}}"/>
             <to id="_to1" uri="activemq:queue:sampleQueue"/>
         </route>
+
+        <route id="sendMessagetoQueue2">
+            <from id="_from3" uri="timer:amq-sender2?period=90000"/>
+            <setBody id="_setBody3">
+                <method method="generateNewID" ref="generatorBean"/>
+            </setBody>
+            <log id="_log3" message="Sending Message '#${body}' to 'sampleQueue2' at {{amq.producer.brokerURL}} Broker"/>
+            <to id="_to3" uri="activemq:queue:sampleQueue2"/>
+        </route>
+
         <route id="sendMessageToVirtualTopic">
             <from id="_from2" uri="timer:amq-sender-vt?period=30000"/>
             <setBody id="_setBody2">
