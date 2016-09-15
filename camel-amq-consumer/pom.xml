@@ -12,7 +12,7 @@
 
 	<artifactId>camel-amq-consumer</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.34-SNAPSHOT</version>
+	<version>1.0.36-SNAPSHOT</version>
 
 	<properties>
 		<!-- Fabric8 Properties -->

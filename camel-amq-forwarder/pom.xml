@@ -12,7 +12,7 @@
 
 	<artifactId>camel-amq-forwarder</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.10-SNAPSHOT</version>
 
 	<properties>
 		<!-- Fabric8 Properties -->
