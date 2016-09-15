@@ -42,14 +42,6 @@ To install Red Hat JBoss Fuse follow the next instructions:
 	[root@rhel7jboss01 jboss-fuse]# ./bin/fuse
 	Please wait while JBoss Fuse is loading...
 	100% [========================================================================]
-	
-	     _ ____                  ______
-	    | |  _ \                |  ____|             
-	    | | |_) | ___  ___ ___  | |__ _   _ ___  ___
-	    | |  _ < / _ \/ __/ __| |  __| | | / __|/ _ \ 
-	| |__| | |_) | (_) \__ \__ \ | |  | |_| \__ \  __/
-	 \____/|____/ \___/|___/___/ |_|   \__,_|___/\___|
-	
 	  JBoss Fuse (6.2.1.redhat-084)
 	  http://www.redhat.com/products/jbossenterprisemiddleware/fuse/
 	
