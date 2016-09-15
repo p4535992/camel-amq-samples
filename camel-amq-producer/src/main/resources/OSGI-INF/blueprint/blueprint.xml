@@ -41,7 +41,9 @@
             <setBody id="_setBody1">
                 <method method="generateNewID" ref="generatorBean"/>
             </setBody>
-            <log id="_log1" message="Sending Message '#${body}' to queue at {{amq.producer.brokerURL}} Broker. Credentials: {{amq.producer.userName}}-{{amq.producer.password}}"/>
+            <log id="_log1" message="Sending Message '#${body}' to queue at {{amq.producer.brokerURL}} Broker. Credentials: {{amq.producer.userName}}"/>
+            <log message="Value of 'env.prop01' = '{{env.prop01}}'"/>
+            <log message="Value of 'common.prop01' = '{{common.prop01}}'"/>
             <to id="_to1" uri="activemq:queue:sampleQueue"/>
         </route>
 
