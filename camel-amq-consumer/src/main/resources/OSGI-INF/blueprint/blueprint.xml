@@ -13,7 +13,7 @@
 	<!-- Environment Configuration -->
 	<cm:property-placeholder id="common" persistent-id="com.redhat.camel.environment" update-strategy="reload">
 		<cm:default-properties>
-			<cm:property name="amq.consumer.brokerURL" value="discovery:(fabric:demo)" />
+			<cm:property name="amq.consumer.brokerURL" value="discovery:(fabric:demo-one)" />
 			<cm:property name="amq.consumer.userName" value="admin" />
 			<cm:property name="amq.consumer.password" value="admin" />
 			<cm:property name="env.prop01" value="Value for env.prop01" />
@@ -40,9 +40,10 @@
 	<!-- Camel Context -->	
 	<camelContext trace="false" id="camel-amq-consumers-blueprintContext" xmlns="http://camel.apache.org/schema/blueprint"
 		errorHandlerRef="myDeadLetterErrorHandler">
-		<route id="consumeMessageFromQueue">
-			<from uri="activemq:queue:sampleQueue" />
-			<log message="Message '${body}' consumed from queue at {{amq.consumer.brokerURL}}" />
+
+		<route id="consumeMessageFromQueueOne">
+			<from uri="activemq:queue:sampleQueueOne" />
+			<log message="Message '${body}' consumed from queue 'sampleQueueOne' at {{amq.consumer.brokerURL}}" />
 		</route>
 
 		<route id="consumeMessageFromVirtualTopicA1">

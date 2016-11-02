@@ -3,8 +3,8 @@ Camel Routes to manage messaging systems (Active-MQ)
 
 These projects show you some route samples to manage JMS messages using the following capabilities:
 
-__Red Hat JBoss Fuse 6.2__:
-* Install Red Hat JBoss Fuse 6.2
+__Red Hat JBoss Fuse 6.3__:
+* Install Red Hat JBoss Fuse 6.3
 * How to create a Fuse Fabric
 * How to create different A-MQ Brokers and their containers
 * How to create Gateway Containers
@@ -29,7 +29,7 @@ This project has the following structure
 # Install Red Hat JBoss Fuse
 
 ## Download
-Download [Red Hat JBoss Fuse 6.2][1] binaries (subscription needed) from Red Hat Customer Portal
+Download [Red Hat JBoss Fuse 6.3][1] binaries (subscription needed) from Red Hat Customer Portal
 
 ## Install
 To install Red Hat JBoss Fuse follow the next instructions:
@@ -37,12 +37,12 @@ To install Red Hat JBoss Fuse follow the next instructions:
 * Unzip .zip file into a specific folder
 * Start Fuse with _bin/fuse_ or _bin/start_ shell scripts (.bat in Windows OS cases) 
 
-	[root@rhel7jboss01 redhat]# unzip jboss-fuse-full-6.2.1.redhat-084.zip
-	[root@rhel7jboss01 redhat]# cd jboss-fuse-6.2.1.redhat-084
+	[root@rhel7jboss01 redhat]# unzip jboss-fuse-full-6.3.0.redhat-187.zip
+	[root@rhel7jboss01 redhat]# cd jboss-fuse-6.3.0.redhat-187
 	[root@rhel7jboss01 jboss-fuse]# ./bin/fuse
 	Please wait while JBoss Fuse is loading...
 	100% [========================================================================]
-	  JBoss Fuse (6.2.1.redhat-084)
+	  JBoss Fuse (6.3.0.redhat-187)
 	  http://www.redhat.com/products/jbossenterprisemiddleware/fuse/
 	
 	Hit '<tab>' for a list of available commands
@@ -78,9 +78,9 @@ The _ensemble-list_ and _container-list_ commands will show us the status of the
 	root
 	JBossFuse:karaf@root> container-list
 	[id]   [version]  [type]  [connected]  [profiles]              [provision status]
-	root*  1.0        karaf   yes          fabric                  success           
-	                                       fabric-ensemble-0000-1                    
-	                                       jboss-fuse-full                           
+	root*  1.0        karaf   yes          fabric                  success
+	                                       fabric-ensemble-0000-1
+	                                       jboss-fuse-full
 
 To reduce the resources used by the Fabric container, it is a good practice to remove the _jboss-fuse-full_ profile in Fabric containers:
 
@@ -89,25 +89,22 @@ To reduce the resources used by the Fabric container, it is a good practice to r
 ## Create MQ-Broker
 We will create two Message Brokers:
 
-* __amq-broker__: Broker to send and to receive messages. This broker will be used by _camel-amq-producer_ and _camel-amq-consumer_ projects
-* __amq-broker2__: Broker to receive messages from the previous broker. This broker will be used by _camel_amq_forwarder_ project
+* __amq-broker-one__: Broker to send and to receive messages. This broker will be used by _camel-amq-producer_ and _camel-amq-consumer_ projects
+* __amq-broker-two__: Broker to receive messages from the previous broker. This broker will be used by _camel_amq_forwarder_ project
 
-	JBossFuse:karaf@root> mq-create --group demo --kind StandAlone --create-container fuse01-amq amq-broker
-	MQ profile mq-broker-demo.amq-broker ready
-	Creating new instance on SSH port 8102 and RMI ports 1100/44445 at: /opt/redhat/jboss-fuse-6.2.1.redhat-084/instances/fuse01-amq
-	mq-create --group demo2 --kind StandAlone --create-container fuse01-amq2 amq-broker2
-	JBossFuse:karaf@root> mq-create --group demo2 --kind StandAlone --create-container fuse01-amq2 amq-broker2
-	MQ profile mq-broker-demo2.amq-broker2 ready
-	Creating new instance on SSH port 8107 and RMI ports 1105/44450 at: /opt/redhat/jboss-fuse-6.2.1.redhat-084/instances/fuse01-amq2
+	JBossFuse:karaf@root> mq-create --group demo-one --kind StandAlone --create-container fuse01-amq-broker-one amq-broker-one
+	MQ profile mq-broker-demo-one.amq-broker-one ready
+	JBossFuse:karaf@root> mq-create --group demo-two --kind StandAlone --create-container fuse01-amq-broker-two amq-broker-two
+	MQ profile mq-broker-demo-two.amq-broker-two ready
 
 We can review the status with the _container-list_ command: 
 
 	JBossFuse:karaf@root> container-list
-	[id]          [version]  [type]  [connected]  [profiles]                 [provision status]
-	root*         1.0        karaf   yes          fabric                     success           
-	                                              fabric-ensemble-0000-1                       
-	  fuse01-amq  1.0        karaf   yes          mq-broker-demo.amq-broker  success
-	  fuse01-amq2 1.0        karaf   yes          mq-broker-demo.amq-broker2 success
+    [id]                     [version]  [type]  [connected]  [profiles]                         [provision status]
+    root*                    1.0        karaf   yes          fabric                             success           
+                                                             fabric-ensemble-0000-1                               
+      fuse01-amq-broker-one  1.0        karaf   yes          mq-broker-demo-one.amq-broker-one  success           
+      fuse01-amq-broker-two  1.0        karaf   yes          mq-broker-demo-two.amq-broker-two  success           
 
 If you review using de Fuse Management Web Console, the screenshot will be similar to:
 
@@ -119,16 +116,15 @@ If you review using de Fuse Management Web Console, the screenshot will be simil
 The _Gateway Containers_ will work as the load balancers to access to the different services working on Fuse Fabric.
 
 	JBossFuse:karaf@root> container-create-child --zookeeper-password zookeeper --profile gateway-mq root fuse01-gw
-	Creating new instance on SSH port 8103 and RMI ports 1101/44446 at: /opt/redhat/jboss-fuse-6.2.1.redhat-084/instances/fuse01-gw
 	The following containers have been created successfully:
 		Container: fuse01-gw.
 	JBossFuse:karaf@root> container-list
-	[id]          [version]  [type]  [connected]  [profiles]                 [provision status]
-	root*         1.0        karaf   yes          fabric                     success           
-	                                              fabric-ensemble-0000-1                       
-	  fuse01-amq  1.0        karaf   yes          mq-broker-demo.amq-broker  success           
-	  fuse01-amq2 1.0        karaf   yes          mq-broker-demo.amq-broker2 success
-	  fuse01-gw   1.0        karaf   yes          gateway-mq                 success        
+    [id]                     [version]  [type]  [connected]  [profiles]                         [provision status]
+    root*                    1.0        karaf   yes          fabric                             success           
+                                                             fabric-ensemble-0000-1                               
+      fuse01-amq-broker-one  1.0        karaf   yes          mq-broker-demo-one.amq-broker-one  success           
+      fuse01-amq-broker-two  1.0        karaf   yes          mq-broker-demo-two.amq-broker-two  success           
+      fuse01-gw              1.0        karaf   yes          gateway-mq                         success           
 
 [More Information about Gateway][3]
 
@@ -136,30 +132,27 @@ The _Gateway Containers_ will work as the load balancers to access to the differ
 Service Containers will be used to deploy the Camel Contexts and Camel Routes to manage the messages:
 
 	JBossFuse:karaf@root> container-create-child --zookeeper-password zookeeper root fuse01-srv-producer
-	Creating new instance on SSH port 8104 and RMI ports 1102/44447 at: /opt/redhat/jboss-fuse-6.2.1.redhat-084/instances/fuse01-srv-producer
 	The following containers have been created successfully:
 		Container: fuse01-srv-producer.
 	JBossFuse:karaf@root> container-create-child --zookeeper-password zookeeper root fuse01-srv-consumer
-	Creating new instance on SSH port 8105 and RMI ports 1103/44448 at: /opt/redhat/jboss-fuse-6.2.1.redhat-084/instances/fuse01-srv-consumer
 	The following containers have been created successfully:
 		Container: fuse01-srv-consumer.
 	JBossFuse:karaf@root> container-create-child --zookeeper-password zookeeper root fuse01-srv-forwarder
-	Creating new instance on SSH port 8106 and RMI ports 1104/44449 at: /opt/redhat/jboss-fuse-6.2.1.redhat-084/instances/fuse01-srv-forwarder
 	The following containers have been created successfully:
 		Container: fuse01-srv-forwarder.
 
 After some minutes we will have the three containers ready to be used:
 
 	JBossFuse:karaf@root> container-list
-	[id]                    [version]  [type]  [connected]  [profiles]                 [provision status]
-	root*                   1.0        karaf   yes          fabric                     success           
-	                                                        fabric-ensemble-0000-1                       
-	  fuse01-amq            1.0        karaf   yes          mq-broker-demo.amq-broker  success           
-	  fuse01-amq2           1.0        karaf   yes          mq-broker-demo.amq-broker2 success
-	  fuse01-gw             1.0        karaf   yes          gateway-mq                 success           
-	  fuse01-srv-consumer   1.0        karaf   yes          default                    success           
-	  fuse01-srv-forwarder  1.0        karaf   yes          default                    success           
-	  fuse01-srv-producer   1.0        karaf   yes          default                    success           
+    [id]                     [version]  [type]  [connected]  [profiles]                         [provision status]
+    root*                    1.0        karaf   yes          fabric                             success           
+                                                             fabric-ensemble-0000-1                               
+      fuse01-amq-broker-one  1.0        karaf   yes          mq-broker-demo-one.amq-broker-one  success           
+      fuse01-amq-broker-two  1.0        karaf   yes          mq-broker-demo-two.amq-broker-two  success           
+      fuse01-gw              1.0        karaf   yes          gateway-mq                         success           
+      fuse01-srv-consumer    1.0        karaf   yes          default                            success           
+      fuse01-srv-forwarder   1.0        karaf   yes          default                            success           
+      fuse01-srv-producer    1.0        karaf   yes          default                            success           
 
 If you review using the Fuse Management Web Console, the screenshot will be similar to:
 
@@ -329,7 +322,7 @@ In Fuse Fabric we could check the status of this new profile:
 	
 	
 	PID: com.redhat.camel.environment
-	  amq.producer.brokerURL discovery:(fabric:demo)
+	  amq.producer.brokerURL discovery:(fabric:demo-one)
 	  common.prop01 Value for common.prop01
 	  env.prop01 Value for env.prop01
 	  amq.producer.userName admin
@@ -347,9 +340,9 @@ Finally we assign this profile to the Service Container created to execute its C
 
 After some minutes we could check the Camel Routes executions in the log files of this container. If there is not errors, the Camel Routes will show the following log messages:
 
-	2016-09-05 19:47:16,099 | INFO  | ://amq-sender-vt | sendMessageToVirtualTopic        | 170 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Sending Message '#2723' to virtual topic at discovery:(fabric:demo) Broker
-	2016-09-05 19:47:16,100 | INFO  | er://amq-sender2 | sendMessagetoQueue2              | 170 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Sending Message '#3234' to 'sampleQueue2' at discovery:(fabric:demo) Broker
-	2016-09-05 19:47:16,104 | INFO  | mer://amq-sender | sendMessagetoQueue               | 170 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Sending Message '#4962' to queue at discovery:(fabric:demo) Broker. Credentials: admin-admin
+    2016-11-02 17:41:05,485 | INFO  | ://amq-sender-vt | sendMessageToVirtualTopic        | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | Sending Message '#7381' to virtual topic at discovery:(fabric:demo-one) Broker
+    2016-11-02 17:41:15,540 | INFO  | //amq-sender-two | sendMessagetoQueueTwo            | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | Sending Message '#1612' to 'sampleQueueTwo' at discovery:(fabric:demo-one) Broker
+    2016-11-02 17:41:33,625 | INFO  | //amq-sender-one | sendMessagetoQueueOne            | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | Sending Message '#6860' to queue at discovery:(fabric:demo-one) Broker. Credentials: admin
 
 If we review the Service Container status using the Fuse Management Web Console, the screenshoot will be similar to the next one:
 
@@ -448,7 +441,7 @@ Display the new profile info:
 	
 	
 	PID: com.redhat.camel.environment
-	  amq.producer.brokerURL discovery:(fabric:default)
+	  amq.producer.brokerURL discovery:(fabric:demo-one)
 	  common.prop01 Value for common.prop01
 	  env.prop01 Value for env.prop01
 	  amq.producer.userName admin
@@ -466,17 +459,9 @@ Finally we assign this profile to the Service Container created to execute its C
 
 After some minutes we could check the Camel Routes executions in the log files of this container. If there is not errors, the Camel Routes will show the following log messages:
 
-	2016-09-05 19:47:19,702 | INFO  | mer[sampleQueue] | consumeMessageFromQueue          | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Message '4962' consumed from queue at discovery:(fabric:demo)
-	2016-09-05 19:47:19,953 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicB2 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-B2] Message '2723' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:47:20,050 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicA1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-A1] Message '2723' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:47:20,065 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicC1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-C1] Message '2723' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:47:46,114 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicB1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-B1] Message '5155' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:47:46,147 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicC1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-C1] Message '5155' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:47:46,155 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicA1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-A1] Message '5155' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:48:16,076 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicB2 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-B2] Message '4928' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:48:16,139 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicC1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-C1] Message '4928' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:48:16,139 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicA1 | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | [CON-A1] Message '4928' consumed from virtual topic at discovery:(fabric:demo)
-	2016-09-05 19:48:16,243 | INFO  | mer[sampleQueue] | consumeMessageFromQueue          | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Message '7941' consumed from queue at discovery:(fabric:demo)
+    2016-11-02 18:01:45,435 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicA1 | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | [CON-A1] Message '7803' consumed from virtual topic at discovery:(fabric:demo-one)
+    2016-11-02 18:01:45,535 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicB2 | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | [CON-B2] Message '5578' consumed from virtual topic at discovery:(fabric:demo-one)
+    2016-11-02 18:01:45,952 | INFO  | ualTopic.Sample] | consumeMessageFromVirtualTopicC1 | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | [CON-C1] Message '5578' consumed from virtual topic at discovery:(fabric:demo-one)
 
 If we review the Service Container status using the Fuse Management Web Console, the screenshoot will be similar to the next one:
 
@@ -579,10 +564,10 @@ Display the new profile info:
 	  amq.destination.userName admin
 	  common.prop01 Value for common.prop01
 	  amq.destination.password admin
-	  amq.source.brokerURL discovery:(fabric:default)
+	  amq.source.brokerURL discovery:(fabric:demo-one)
 	  env.prop01 Value for env.prop01
 	  amq.source.userName admin
-	  amq.destination.brokerURL discovery:(fabric:demo)
+	  amq.destination.brokerURL discovery:(fabric:demo-two)
 	
 	
 	
@@ -596,10 +581,8 @@ Finally we assign this profile to the Service Container created to execute its C
 
 After some minutes we could check the Camel Routes executions in the log files of this container. If there is not errors, the Camel Routes will show the following log messages:
 
-	2016-09-05 19:47:19,360 | INFO  | er[sampleQueue2] | cosumerProcess                   | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Message '#3234' consumed from 'sampleQueue2' at discovery:(fabric:demo) 
-	2016-09-05 19:47:19,361 | INFO  | er[sampleQueue2] | cosumerProcess                   | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Message '#3234' sent to 'anotherSampleQueue' at discovery:(fabric:demo2) 
-	2016-09-05 19:48:46,189 | INFO  | er[sampleQueue2] | cosumerProcess                   | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Message '#2406' consumed from 'sampleQueue2' at discovery:(fabric:demo) 
-	2016-09-05 19:48:46,190 | INFO  | er[sampleQueue2] | cosumerProcess                   | 123 - org.apache.camel.camel-core - 2.15.1.redhat-621084 | Message '#2406' sent to 'anotherSampleQueue' at discovery:(fabric:demo2) 
+    2016-11-02 17:38:16,735 | INFO  | [sampleQueueTwo] | forwarderRoute                   | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | Message '#6913' consumed from 'sampleQueueTwo' at discovery:(fabric:demo-one) 
+    2016-11-02 17:38:16,762 | INFO  | [sampleQueueTwo] | forwarderRoute                   | 153 - org.apache.camel.camel-core - 2.17.0.redhat-630187 | Message '#6913' sent to 'sampleQueueSecond' at discovery:(fabric:demo-two) 
 
 If we review the Service Container status using the Fuse Management Web Console, the screenshoot will be similar to the next one:
 
@@ -619,15 +602,15 @@ The Camel Routes use the _fabric discovery agent_ to connect with the different 
 
 To use this discovery method the broker URL will be similar to: 
 
-	amq.producer.brokerURL=discovery:(fabric:demo)
+	amq.producer.brokerURL=discovery:(fabric:demo-one)
 
 More information about [Fuse Fabric Discovery Agent][5] and [how to connect to a broker][6].
 
 <!-- Reference Links -->
 
-[1]: https://access.redhat.com/jbossnetwork/restricted/softwareDetail.html?softwareId=41311&product=jboss.fuse&version=6.2.1&downloadType=distributions "Red Hat JBoss Fuse 6.2"
-[2]: https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.2/html/Fabric_Guide/MQ.html "Chapter 6. Active-MQ brokers and Clusters"
-[3]: https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.2/html/Fabric_Guide/Gateway.html "Chapter 10. Gateway"
-[4]: https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.2.1/html/Fabric_Guide/F8Plugin.html
+[1]: https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.fuse&version=6.3.0 "Red Hat JBoss Fuse 6.3.0"
+[2]: https://access.redhat.com/documentation/en/red-hat-jboss-fuse/6.3/paged/fabric-guide/chapter-7-activemq-brokers-and-clusters "Chapter 7. ActiveMQ Brokers and Clusters"
+[3]: https://access.redhat.com/documentation/en/red-hat-jboss-fuse/6.3/paged/fabric-guide/chapter-11-gateway "Chapter 11. Gateway"
+[4]: https://access.redhat.com/documentation/en/red-hat-jboss-fuse/6.3/paged/fabric-guide/chapter-6-fabric8-maven-plug-in "Chaptter 6. Fabric8 Maven Plug-In"
 [5]: https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_A-MQ/6.0/html/Fault_Tolerant_Messaging/files/FMQNetworksFabricDiscovery.html
 [6]: https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.2.1/html/Fabric_Guide/MQ-Connecting.html
