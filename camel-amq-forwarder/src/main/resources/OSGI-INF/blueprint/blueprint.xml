@@ -11,15 +11,15 @@
        http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
 	<!-- Environment Configuration -->
-	<cm:property-placeholder id="common" persistent-id="com.redhat.camel.environment" update-strategy="reload">
+	<cm:property-placeholder id="com.redhat.camel.environment" persistent-id="com.redhat.camel.environment" update-strategy="reload">
 		<cm:default-properties>
-			<cm:property name="amq.source.brokerURL" value="discovery:(fabric:demo-one)" />
+			<cm:property name="amq.source.brokerURL" value="vm://localhost" />
 			<cm:property name="amq.source.userName" value="admin" />
 			<cm:property name="amq.source.password" value="admin" />
 			<!-- 
 			<cm:property name="amq.destination.brokerURL" value="failover:(tcp://rhel7jboss01:61616,tcp://rhel7jboss02:61616,tcp://rhel7jboss03:61616)" />
 			-->
-			<cm:property name="amq.destination.brokerURL" value="discovery:(fabric:demo-two)" />
+			<cm:property name="amq.destination.brokerURL" value="vm://localhost" />
 			<cm:property name="amq.destination.userName" value="admin" />
 			<cm:property name="amq.destination.password" value="admin" />
 			

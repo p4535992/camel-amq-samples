@@ -13,10 +13,9 @@
     	http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
     <!-- Environment Configuration -->
-    <cm:property-placeholder id="common"
-        persistent-id="com.redhat.camel.environment" update-strategy="reload">
+    <cm:property-placeholder id="com.redhat.camel.environment" persistent-id="com.redhat.camel.environment" update-strategy="reload">
         <cm:default-properties>
-            <cm:property name="amq.producer.brokerURL" value="discovery:(fabric:default)"/>
+            <cm:property name="amq.producer.brokerURL" value="vm://localhost"/>
             <cm:property name="amq.producer.userName" value="admin"/>
             <cm:property name="amq.producer.password" value="admin"/>
             <cm:property name="env.prop01" value="Value for env.prop01"/>

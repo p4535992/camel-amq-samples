@@ -7,12 +7,12 @@
 	<parent>
 		<groupId>com.redhat.camel</groupId>
 		<artifactId>camel-amq-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>camel-amq-consumer</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.43</version>
+	<version>1.1.0-SNAPSHOT</version>
 
 	<properties>
 		<!-- Fabric8 Properties -->
@@ -23,23 +23,19 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
-			<version>${org.apache.camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-blueprint</artifactId>
-			<version>${org.apache.camel.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-camel</artifactId>
-			<version>${org.apache.activemq.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-pool</artifactId>
-			<version>${org.apache.activemq.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -47,7 +43,6 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-test-blueprint</artifactId>
-			<version>${org.apache.camel.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -60,21 +55,13 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.3.7</version>
+				<version>${maven.plugin.bundle}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>${project.name}</Bundle-Name>
-						<Bundle-Version>${project.version}</Bundle-Version>
-						<Private-Package>
-							com.redhat.camel.amq.*
-						</Private-Package>
-						<Import-Package>*</Import-Package>
-						<Export-Package>
-							org.apache.activemq.camel.component,
-							org.apache.activemq.pool
-						</Export-Package>
+						<Bundle-Version>${project.version}-${timestamp}</Bundle-Version>
 					</instructions>
 				</configuration>
 			</plugin>
