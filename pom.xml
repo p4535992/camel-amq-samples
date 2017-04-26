@@ -38,12 +38,12 @@
 		<repository>
 			<id>nexus</id>
 			<name>Internal Releases</name>
-			<url>http://rhel7jboss01:8081/nexus/content/repositories/releases/</url>
+			<url>http://nexus:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus</id>
 			<name>Internal Releases</name>
-			<url>http://rhel7jboss01:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://nexus:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
