@@ -13,9 +13,9 @@
 	<!-- Environment Configuration -->
 	<cm:property-placeholder id="com.redhat.camel.environment" persistent-id="com.redhat.camel.environment" update-strategy="reload">
 		<cm:default-properties>
-			<cm:property name="amq.consumer.brokerURL" value="vm://localhost" />
-			<cm:property name="amq.consumer.userName" value="admin" />
-			<cm:property name="amq.consumer.password" value="admin" />
+			<cm:property name="amq.consumer.brokerURL" value="failover:(tcp://localhost:61616,tcp://localhost:61716)?initialReconnectDelay=100&amp;maxReconnectAttempts=10&amp;maxReconnectDelay=1000&amp;warnAfterReconnectAttempts=5" />
+			<cm:property name="amq.consumer.userName" value="amq" />
+			<cm:property name="amq.consumer.password" value="karaf" />
 			<cm:property name="env.prop01" value="Value for env.prop01" />
 			<cm:property name="common.prop01" value="Value for common.prop01" />
 		</cm:default-properties>
