@@ -4,12 +4,12 @@
     xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
     xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
     xmlns:jaxws="http://cxf.apache.org/jaxws"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="      
-    	http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd              
-    	http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd              
-    	http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd              
-    	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd              
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    	http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+    	http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+    	http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd
+    	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
     	http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
     <!-- Environment Configuration -->
@@ -67,6 +67,7 @@
             <to id="_to3" uri="activemq:queue:sampleQueueTwo"/>
         </route>
 
+        <!--
         <route id="sendMessageToVirtualTopic">
             <from id="_from2" uri="timer:amq-sender-vt?period=30000"/>
             <setBody id="_setBody2">
@@ -75,5 +76,6 @@
             <log id="_log2" message="Sending Message '#${body}' to virtual topic at {{amq.producer.brokerURL}} Broker"/>
             <to id="_to2" uri="activemq:topic:VirtualTopic.Sample"/>
         </route>
+        -->
     </camelContext>
 </blueprint>

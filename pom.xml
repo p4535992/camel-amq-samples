@@ -19,31 +19,34 @@
 		<timestamp>${maven.build.timestamp}</timestamp>
 
 		<!-- Dependency Versions -->
-		<jboss.fuse.bom.version>6.3.0.redhat-254</jboss.fuse.bom.version>
-		<org.apache.camel.version>2.17.0.redhat-630254</org.apache.camel.version>
+		<jboss.fuse.bom.version>6.3.0.redhat-262</jboss.fuse.bom.version>
+		<org.apache.camel.version>2.17.0.redhat-630262</org.apache.camel.version>
 
 		<!-- Plug-In Versions -->
 		<maven.plugin.compiler>3.5.1</maven.plugin.compiler>
 		<maven.plugin.resources>3.0.1</maven.plugin.resources>
 		<maven.plugin.bundle>3.2.0</maven.plugin.bundle>
-		<io.fabric8.version>1.2.0.redhat-630254</io.fabric8.version>
+		<io.fabric8.version>1.2.0.redhat-630262</io.fabric8.version>
 
 		<!-- Joolokia Environments -->
 		<joolokia.local>http://localhost:8181/jolokia</joolokia.local>
 		<joolokia.remote>http://rhel7jboss01:8181/jolokia</joolokia.remote>
 		<joolokia.remote.serverId>fabric8.server.demo</joolokia.remote.serverId>
+
+		<!-- Nexus -->
+		<nexus.repository.url>http://nexus:8081</nexus.repository.url>
 	</properties>
 
 	<distributionManagement>
 		<repository>
 			<id>nexus</id>
 			<name>Internal Releases</name>
-			<url>http://nexus:8081/nexus/content/repositories/releases/</url>
+			<url>${nexus.repository.url}/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus</id>
 			<name>Internal Releases</name>
-			<url>http://nexus:8081/nexus/content/repositories/snapshots/</url>
+			<url>${nexus.repository.url}/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -174,7 +177,7 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>

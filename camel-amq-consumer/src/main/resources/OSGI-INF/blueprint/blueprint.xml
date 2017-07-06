@@ -26,7 +26,7 @@
 		<property name="userName" value="${amq.consumer.userName}" />
 		<property name="password" value="${amq.consumer.password}" />
 	</bean>
-		
+
 	<!-- Error Handler -->
 	<bean id="myDeadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
   		<property name="deadLetterUri" value="activemq:queue:consumer-errors"/>
@@ -37,7 +37,7 @@
   		<property name="redeliveryDelay" value="10000"/>
 	</bean>
 
-	<!-- Camel Context -->	
+	<!-- Camel Context -->
 	<camelContext trace="false" id="camel-amq-consumers-blueprintContext" xmlns="http://camel.apache.org/schema/blueprint"
 		errorHandlerRef="myDeadLetterErrorHandler">
 
@@ -46,6 +46,7 @@
 			<log message="Message '${body}' consumed from queue 'sampleQueueOne' at {{amq.consumer.brokerURL}}" />
 		</route>
 
+		<!--
 		<route id="consumeMessageFromVirtualTopicA1">
 			<from uri="activemq:Consumer.A.VirtualTopic.Sample" />
 			<log message="[CON-A1] Message '${body}' consumed from virtual topic at {{amq.consumer.brokerURL}}" />
@@ -65,6 +66,7 @@
 			<from uri="activemq:Consumer.C.VirtualTopic.Sample" />
 			<log message="[CON-C1] Message '${body}' consumed from virtual topic at {{amq.consumer.brokerURL}}" />
 		</route>
+	  -->
 
 		<route id="consumeMessageFromAnotherSampleQueue">
 			<from uri="activemq:queue:anotherSampleQueue" />
