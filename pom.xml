@@ -7,7 +7,7 @@
 	<groupId>com.redhat.camel</groupId>
 	<artifactId>camel-amq-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>6.2.1-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,16 +19,16 @@
 		<timestamp>${maven.build.timestamp}</timestamp>
 
 		<!-- Versions -->
-		<org.apache.camel.version>2.15.1</org.apache.camel.version>
+		<org.apache.camel.version>2.15.1.redhat-621159</org.apache.camel.version>
 		<org.slf4j.version>1.7.5</org.slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
 		<org.apache.activemq.version>5.11.0</org.apache.activemq.version>
-		<io.fabric8.version>1.2.0.redhat-621084</io.fabric8.version>
+		<io.fabric8.version>1.2.0.redhat-621159</io.fabric8.version>
 		
-		<!-- Joolokia Environments -->
-		<joolokia.local>http://localhost:8181/jolokia</joolokia.local>
-		<joolokia.remote>http://rhel7jboss01:8181/jolokia</joolokia.remote>
-		<joolokia.remote.serverId>fabric8.server.demo</joolokia.remote.serverId>
+		<!-- Jolokia Environments -->
+		<jolokia.local>http://localhost:8181/jolokia</jolokia.local>
+		<jolokia.remote>http://rhel7jboss01:8181/jolokia</jolokia.remote>
+		<jolokia.remote.serverId>fabric8.server.demo</jolokia.remote.serverId>
 	</properties>
 
     <modules>
@@ -182,7 +182,7 @@
 				<artifactId>fabric8-maven-plugin</artifactId>
 				<version>${io.fabric8.version}</version>
 				<configuration>
-					<jolokiaUrl>${joolokia.local}</jolokiaUrl>
+					<jolokiaUrl>${jolokia.local}</jolokiaUrl>
 				</configuration>
 				<executions>
 					<execution>
@@ -244,8 +244,8 @@
 						<artifactId>fabric8-maven-plugin</artifactId>
 						<version>${io.fabric8.version}</version>
 						<configuration>
-				          	<jolokiaUrl>${joolokia.remote}</jolokiaUrl>
-				          	<serverId>${joolokia.remote.serverId}</serverId>
+				          	<jolokiaUrl>${jolokia.remote}</jolokiaUrl>
+				          	<serverId>${jolokia.remote.serverId}</serverId>
 				          	<upload>true</upload>							
 						</configuration>
 						<executions>
